@@ -8,9 +8,11 @@ import java.sql.SQLException;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TokenService tokenService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, TokenService tokenService) {
         this.userRepository = userRepository;
+        this.tokenService = tokenService;
     }
 
     public User register(String username, String password) throws SQLException {
@@ -22,13 +24,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User login(String username, String password) throws SQLException {
+    public String login(String username, String password) throws SQLException {
         checkNotEmpty(username, password);
         User user = userRepository.findByUsername(username);
         if (user == null || !user.getPasswordHash().equals(PasswordHasher.hash(password))) {
             throw new ServiceException(401, "Username oder Passwort falsch");
         }
-        return user;
+        return tokenService.createToken(user.getId());
     }
 
     private void checkNotEmpty(String username, String password) {

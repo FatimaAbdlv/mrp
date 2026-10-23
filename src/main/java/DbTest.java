@@ -6,13 +6,13 @@ public class DbTest {
         String user = "mrp";
         String password = "mrp";
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             System.out.println("Connected!");
 
-            try (Statement st = conn.createStatement();
-                 ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM users")) {
-                rs.next();
-                System.out.println("Anzahl User: " + rs.getInt(1));
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM users")) {
+                resultSet.next();
+                System.out.println("Amount of Users: " + resultSet.getInt(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
