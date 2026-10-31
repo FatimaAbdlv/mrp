@@ -29,7 +29,7 @@ public class MediaService {
     public MediaEntry getById(int id) throws SQLException {
         MediaEntry media = mediaRepository.findById(id);
         if (media == null) {
-            throw new ServiceException(404, "Medium nicht gefunden");
+            throw ServiceException.notFound("Medium nicht gefunden");
         }
         return media;
     }
@@ -51,26 +51,26 @@ public class MediaService {
     private MediaEntry findOwned(int id, int userId) throws SQLException {
         MediaEntry media = mediaRepository.findById(id);
         if (media == null) {
-            throw new ServiceException(404, "Medium nicht gefunden");
+            throw ServiceException.notFound("Medium nicht gefunden");
         }
         if (media.getCreatorId() != userId) {
-            throw new ServiceException(403, "Nur der Ersteller darf dieses Medium ändern oder löschen");
+            throw ServiceException.forbidden("Nur der Ersteller darf dieses Medium ändern oder löschen");
         }
         return media;
     }
 
     private void checkMedia(MediaEntry media) {
         if (media.getTitle() == null || media.getTitle().isBlank()) {
-            throw new ServiceException(400, "Titel ist Pflicht");
+            throw ServiceException.badRequest("Titel ist Pflicht");
         }
         if (media.getMediaType() == null) {
-            throw new ServiceException(400, "Medientyp ist Pflicht");
+            throw ServiceException.badRequest("Medientyp ist Pflicht");
         }
         if (media.getReleaseYear() <= 0) {
-            throw new ServiceException(400, "Erscheinungsjahr ist ungültig");
+            throw ServiceException.badRequest("Erscheinungsjahr ist ungültig");
         }
         if (media.getAgeRestriction() < 0) {
-            throw new ServiceException(400, "Altersfreigabe ist ungültig");
+            throw ServiceException.badRequest("Altersfreigabe ist ungültig");
         }
         if (media.getGenres() == null) {
             media.setGenres(new ArrayList<>());
