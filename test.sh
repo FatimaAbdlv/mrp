@@ -29,7 +29,7 @@ echo "=== 7. Login mit unbekanntem Benutzer (erwartet 401) ==="
 curl -s -w "\nStatus: %{http_code}\n" "$BASE/api/users/login" -H "$JSON" -d "{\"username\":\"gibtsnicht_$STAMP\",\"password\":\"egal\"}"
 
 echo "=== 8. SQL-Injection-Versuch beim Login (erwartet 401) ==="
-curl -s -w "\nStatus: %{http_code}\n" "$BASE/api/users/login" -H "$JSON" -d "{\"username\":\"' OR '1'='1\",\"password\":\"egal\"}"
+curl -s -w "\nStatus: %{http_code}\n" "$BASE/api/users/login" -H "$JSON" -d "{\"username\":\"' OR '1'='1\",\"password\":\"egal_$STAMP\"}"
 
 echo "=== 9. Login Benutzer 1 (erwartet 200 und Token) ==="
 RESPONSE=$(curl -s -w "\nStatus: %{http_code}\n" "$BASE/api/users/login" -H "$JSON" -d "{\"username\":\"$USER1\",\"password\":\"$PASSWORT\"}")
